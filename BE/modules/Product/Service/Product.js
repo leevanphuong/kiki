@@ -21,7 +21,7 @@ export const addProduct= async(req)=>{
 return products
 }
 export const updateProduct =async (req)=>{
-    const id = req.params.id
+    const id = req.params._id
     const fileImages=req.files
     const check = fileImages.flatMap((item)=>item.path)
     const update = await Product.updateOne({
