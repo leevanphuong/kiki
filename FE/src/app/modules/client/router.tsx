@@ -9,6 +9,7 @@ import CheckOut from './checkout/checkout.component'
 import GeneralIntroduction from './aboutUs/generalIntroduction.component'
 import FashionShow from './aboutUs/fashionShow.component'
 import CommunityActivities from './aboutUs/communityActivities.component'
+import ThankCustomers from './thankCustomers/thankCustomers.component'
 
 export const clientRouter: RouteObject[] = [
   {
@@ -51,6 +52,10 @@ export const clientRouter: RouteObject[] = [
     path: "/Community-Activities",
     element: <CommunityActivities />
   },
+  {
+    path:"thankcustomers",
+    element: <ThankCustomers/>
+  }
 ]
 
 
