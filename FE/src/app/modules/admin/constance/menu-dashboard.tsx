@@ -8,8 +8,8 @@ import {
     BankOutlined,
     HomeOutlined,
     CommentOutlined,
-    CustomerServiceOutlined
-
+    CustomerServiceOutlined,
+    FileTextOutlined 
 } from '@ant-design/icons'
 import { SiAdminer } from 'react-icons/si';
 
@@ -63,6 +63,11 @@ export const menuDashBoard = [
         key: '/admin/paymentvnpay',
         icon: <BankOutlined />,
         label: 'Payment VNPay'
+    },
+    {
+        key: '/admin/content',
+        icon: <FileTextOutlined />,
+        label: 'Content'
     },
     {
         key: '/',

@@ -5,16 +5,20 @@ import { AiOutlineSearch, AiOutlineSetting, AiOutlineUserAdd } from 'react-icons
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 import { useCartRedux } from '~/app/modules/client/redux/hook/useCartReducer'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuthRedux } from '~/app/modules/client/redux/hook/useAuthReducer'
 import { useProductRedux } from '~/app/modules/client/redux/hook/useProductReducer'
 import { HiOutlineLogout } from 'react-icons/hi'
 import { searchProduct } from '~/app/modules/admin/product/service/product.service'
-
+import Marquee from 'react-fast-marquee'
+import { getAllContent } from '~/app/modules/admin/content/service/content.service'
 interface HeaderComponentProps {
   props?: any
 }
 
 const HeaderComponent: FunctionComponent<HeaderComponentProps> = () => {
+  const [content, setContent] = useState([])
+  useEffect(() => {
+    getAllContent().then(({ data }) => setContent(data));
+  }, []);
   let navigate = useNavigate()
   const {
     data: { carts },
@@ -76,7 +80,8 @@ const HeaderComponent: FunctionComponent<HeaderComponentProps> = () => {
     }
   }
   return (
-    <div className='mx-auto flex items-center justify-between sm:w-[1380px] h-[80px]'>
+   <div>
+     <div className='mx-auto flex items-center justify-between sm:w-[1380px] h-[80px]'>
       <div css={cssMenu} className='space-x-8'>
         <div>
           <Link className='hover:text-red-500' to={'/'}>
@@ -198,6 +203,23 @@ const HeaderComponent: FunctionComponent<HeaderComponentProps> = () => {
         </div>
       </div>
     </div>
+    <Marquee  direction="left" className='py-3 mb-5 z-0' style={{backgroundColor:"#FFAA00"}}>
+      
+      {content.map((item:any)=>{
+        if (item?.hidden === "Hiển thị") {
+          return (
+            <p style={{padding:"0px 300px"}} key={item?._id} className='text-[20px] text-black italic flex' >
+              <img className='w-auto h-[30px] px-3' src="https://pubcdn.ivymoda.com/ivy2/images/logo.png" alt="" />
+              {item?.content}
+              </p>
+          )
+        }
+        else{
+          return null
+        }
+      })}
+    </Marquee>
+   </div>
   )
 }
 

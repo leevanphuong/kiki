@@ -10,7 +10,7 @@ const AddVorcher = (props: Props) => {
         actionsVorcher.getVorcher()
       }, [])
     return (
-        <div className='container' css={cssvorcher}>
+        <div className='container z-0' css={cssvorcher}>
             <div className='allvorcher'>
                 <div className='flex'>
                 <table className="min-w-full">
@@ -20,7 +20,7 @@ const AddVorcher = (props: Props) => {
                         <th className="py-2">Vorcher</th>
                         <th className="py-2">Mã</th>
                         <th className="py-2">Giảm giá</th>
-                        <th className="py-2"></th>
+                        <th className="py-2">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +30,11 @@ const AddVorcher = (props: Props) => {
                             <td className="py-2 px-4">{item?.name}</td>
                             <td className="py-2 px-4">{item?.code}</td>
                             <td className="py-2 px-4">{item?.discount}</td>
-                            <td className="py-2 px-4"></td>
+                            <td className="py-2 px-4">
+                            <button className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Áp dụng
+                                </button>
+                            </td>
                             </tr>
                         ))}
                         </tbody>

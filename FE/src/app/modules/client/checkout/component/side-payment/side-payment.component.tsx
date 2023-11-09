@@ -4,6 +4,7 @@ import { useCartRedux } from '../../../redux/hook/useCartReducer'
 import ButtonSqua from '~/app/component/parts/button/ButtonSqua'
 import { useVorcherRedux } from '../../../redux/hook/useVorcherReducer'
 import { GrFormClose } from 'react-icons/gr'
+import { message } from 'antd'
 import AddVorcher from './AddVorcher/AddVorcher.component'
 import AddVorcherHoliday from './AddVorcher/AddVorcherholiday.component'
 
@@ -48,25 +49,55 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
       setTotalPrice(calculatedTotal)
     }
   }, [listProductBuy])
-  console.log(vorchers)
-  const handleApplyVoucher = () => {
-    let found = false;
-    for (let i = 0; i < vorchers.length; i++) {
-      if (vorchers[i].code === voucherCode) {
-        setSale(vorchers[i].discount);
-        found = true;
-        break;
-      }
-      else {
-        setSale(0)
-      }
-    }
-    localStorage.setItem('voucherCode', voucherCode)
-  };
+ 
+const handleApplyVoucher = (value: string) => {
+  if (value === '') {
+    message.error('Voucher code is required');
+    setSale(0);
+    return;
+  }
 
   const [stateAddVorcher, setstateAddVorcher] = useState(false)
   const [stateAddVorcherHoliday, setstateAddVorcherHoliday] = useState(false)
   const isHoliday = vorchers.some((item: any) => item.type === "Ngày lễ");
+  let found = false;
+  for (let i = 0; i < vorchers.length; i++) {
+    if (vorchers[i].code === value) {
+      setSale(vorchers[i].discount);
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    setSale(0);
+  }
+
+  localStorage.setItem('voucherCode', value);
+};
+const NewhandleClick = () => {
+  handleApplyVoucher(voucherCode);
+};
+
+  
+  
+  // Hàm xử lý sự kiện khi nút "Áp dụng" được nhấn
+  // const handleVnPayPayment = async () => {
+  //   const response = await createPayment({ infoOrder, productOrder: totalPrice - sale });
+  //   const vnpayUrl = response.data;
+  //   window.location.href = vnpayUrl;
+  // };
+  const [stateAddVorcher, setstateAddVorcher] = useState(false)
+  const [stateAddVorcherHoliday, setstateAddVorcherHoliday] = useState(false)
+  const isHoliday = vorchers.some((item:any) => item.type === "Ngày lễ");
+
+
+  const [valueVorcher, setValivocher]= useState<any>('')
+  const getValueVocher = localStorage.getItem("voucherCode")
+  useEffect(()=>{
+    setValivocher(getValueVocher)
+  },[getValueVocher])
+ 
   return (
     <div css={cssSidebar} className=' max-md:hidden mt-[30px]'>
       <div className='sidebar-wrapper max-sm:hidden'>
@@ -167,17 +198,55 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
             <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcher(false)}><GrFormClose /></div>
           </div>}
           {stateAddVorcher && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcher(false)}></div>}
+           {stateAddVorcher && <div className='absolute z-50'>
+           <div className='container z-0' css={cssvorcher}>
+            <div className='allvorcher'>
+                <div className='flex'>
+                <table className="min-w-full">
+                    <thead>
+                        <tr>
+                        <th className="py-2"></th>
+                        <th className="py-2">Vorcher</th>
+                        <th className="py-2">Mã</th>
+                        <th className="py-2">Giảm giá</th>
+                        <th className="py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {vorchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                            <td className="py-2 px-4">{index + 1}</td>
+                            <td className="py-2 px-4">{item?.name}</td>
+                            <td className="py-2 px-4">{item?.code}</td>
+                            <td className="py-2 px-4">{item?.discount}</td>
+                            <td className="py-2 px-4">
+                            <button onClick={() => handleApplyVoucher(item?.code)} className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                              Áp dụng
+                            </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                        
+                </table>               
+                </div>
+                </div>
+        </div>
+                    <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcher(false)}><GrFormClose /></div>
+                  </div>}
+              {stateAddVorcher && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcher(false)}></div>}
           <div className='flex px-[16px] py-[20px]'>
             <input
               className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500"
               type="text"
+              value={valueVorcher}
               placeholder="Mã giảm giá"
               onChange={(e: any) => {
                 setVoucherCode(e.target.value)
                 localStorage.setItem('voucherCode', e.target.value)
               }}
             />
-            <ButtonSqua children='Áp dụng' className='btnSqua' onClick={handleApplyVoucher} />
+            <ButtonSqua children='Áp dụng' className='btnSqua' onClick={NewhandleClick} />
           </div>
 
         </div>
@@ -192,6 +261,46 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
               {isHoliday && (
                 <div>
                   <div className="flex px-[16px] py-[8px]">
+            <div className='container z-0' css={cssvorcher}>
+            <div className='allvorcher'>
+                <div className='flex'>
+                <table className="min-w-full">
+                    <thead>
+                        <tr>
+                        <th className="py-2"></th>
+                        <th className="py-2">Vorcher</th>
+                        <th className="py-2">Mã</th>
+                        <th className="py-2">Giảm giá</th>
+                        <th className="py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {vorchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                            <td className="py-2 px-4">{index + 1}</td>
+                            <td className="py-2 px-4">{item?.name}</td>
+                            <td className="py-2 px-4">{item?.code}</td>
+                            <td className="py-2 px-4">{item?.discount}</td>
+                            <td className="py-2 px-4">
+                            <button onClick={()=>handleApplyVoucher(item?.code)} className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Áp dụng
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                        
+                </table>               
+                </div>
+                </div>
+            </div>
+                    <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcherHoliday(false)}><GrFormClose /></div>
+                  </div>
+              {stateAddVorcherHoliday && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcherHoliday(false)}></div>}
+              <div>
+                {isHoliday && (
+               <div>
+                   <div className="flex px-[16px] py-[8px]">
                     <div className="text-[18px] font-semibold text-[#3e3e3f]">Mã phiếu giảm giá</div>
                     <span className="mx-[20px] w-[2px] h-[24px] bg-[#939598]"></span>
                     <div>
@@ -215,7 +324,23 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
                 </div>
               )}
             </div>
-
+<div>
+                      <input
+                        className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500"
+                        type="text"
+                        value={valueVorcher}
+                        placeholder="Mã giảm giá"
+                        onChange={(e: any) => {
+                          setVoucherCode(e.target.value)
+                          localStorage.setItem('voucherCode', e.target.value)
+                        }}
+                      />
+                      <ButtonSqua children='Áp dụng' className='btnSqua' onClick={NewhandleClick} />
+                    </div>
+               </div>
+                )}
+              </div>
+          
           </div>
         )}
         <div className='flexRow'>
@@ -359,4 +484,13 @@ const cssSidebar = css`
     background:gray;
     opacity:0.5;
   }
+`
+const cssvorcher = css`
+    .allvorcher{
+        width: auto;
+        max-height: 150px;
+        overflow-y: auto;
+        background-color: #fff;
+        border-radius: 10px;
+    }
 `
