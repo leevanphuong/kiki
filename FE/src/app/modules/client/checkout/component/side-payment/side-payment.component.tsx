@@ -5,9 +5,6 @@ import ButtonSqua from '~/app/component/parts/button/ButtonSqua'
 import { useVorcherRedux } from '../../../redux/hook/useVorcherReducer'
 import { GrFormClose } from 'react-icons/gr'
 import { message } from 'antd'
-import AddVorcher from './AddVorcher/AddVorcher.component'
-import AddVorcherHoliday from './AddVorcher/AddVorcherholiday.component'
-
 interface SidePaymentProps {
   props?: any
 }
@@ -56,9 +53,6 @@ const handleApplyVoucher = (value: string) => {
     setSale(0);
     return;
   }
-
-  const [stateAddVorcher, setstateAddVorcher] = useState(false)
-  const [stateAddVorcherHoliday, setstateAddVorcherHoliday] = useState(false)
   const isHoliday = vorchers.some((item: any) => item.type === "Ngày lễ");
   let found = false;
   for (let i = 0; i < vorchers.length; i++) {
@@ -76,7 +70,7 @@ const handleApplyVoucher = (value: string) => {
   localStorage.setItem('voucherCode', value);
 };
 const NewhandleClick = () => {
-  handleApplyVoucher(voucherCode);
+  handleApplyVoucher(voucherCode)
 };
 
   
@@ -97,7 +91,6 @@ const NewhandleClick = () => {
   useEffect(()=>{
     setValivocher(getValueVocher)
   },[getValueVocher])
- 
   return (
     <div css={cssSidebar} className=' max-md:hidden mt-[30px]'>
       <div className='sidebar-wrapper max-sm:hidden'>
@@ -194,7 +187,39 @@ const NewhandleClick = () => {
             </div>
           </div>
           {stateAddVorcher && <div className='absolute z-50'>
-            <AddVorcher />
+          <div className='container z-0' css={cssvorcher}>
+            <div className='allvorcher'>
+                <div className='flex'>
+                <table className="min-w-full">
+                    <thead>
+                        <tr>
+                        <th className="py-2"></th>
+                        <th className="py-2">Vorcher</th>
+                        <th className="py-2">Mã</th>
+                        <th className="py-2">Giảm giá</th>
+                        <th className="py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {vorchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                            <td className="py-2 px-4">{index + 1}</td>
+                            <td className="py-2 px-4">{item?.name}</td>
+                            <td className="py-2 px-4">{item?.code}</td>
+                            <td className="py-2 px-4">{item?.discount}</td>
+                            <td className="py-2 px-4">
+                            <button onClick={() => handleApplyVoucher(item?.code)} className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Áp dụng
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                        
+                </table>               
+                </div>
+                </div>
+        </div>
             <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcher(false)}><GrFormClose /></div>
           </div>}
           {stateAddVorcher && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcher(false)}></div>}
@@ -253,7 +278,39 @@ const NewhandleClick = () => {
         ) : (
           <div className='flex px-[16px] py-[8px]'>
             {stateAddVorcherHoliday && <div className='absolute z-50'>
-              <AddVorcherHoliday />
+            <div className='container z-0' css={cssvorcher}>
+            <div className='allvorcher'>
+                <div className='flex'>
+                <table className="min-w-full">
+                    <thead>
+                        <tr>
+                        <th className="py-2"></th>
+                        <th className="py-2">Vorcher</th>
+                        <th className="py-2">Mã</th>
+                        <th className="py-2">Giảm giá</th>
+                        <th className="py-2">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {vorchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                            <td className="py-2 px-4">{index + 1}</td>
+                            <td className="py-2 px-4">{item?.name}</td>
+                            <td className="py-2 px-4">{item?.code}</td>
+                            <td className="py-2 px-4">{item?.discount}</td>
+                            <td className="py-2 px-4">
+                            <button className="btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Áp dụng
+                                </button>
+                            </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                        
+                </table>               
+                </div>
+                </div>
+        </div>
               <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcherHoliday(false)}><GrFormClose /></div>
             </div>}
             {stateAddVorcherHoliday && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcherHoliday(false)}></div>}
