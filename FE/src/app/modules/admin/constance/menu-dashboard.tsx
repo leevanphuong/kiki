@@ -8,7 +8,8 @@ import {
     BankOutlined,
     HomeOutlined,
     CommentOutlined,
-    CustomerServiceOutlined
+    CustomerServiceOutlined,
+    FileTextOutlined
 
 } from '@ant-design/icons'
 import { SiAdminer } from 'react-icons/si';
@@ -53,6 +54,11 @@ export const menuDashBoard = [
         key: '/admin/vorcher',
         icon: <MoneyCollectOutlined />,
         label: 'Vocher'
+    },
+    {
+        key: '/admin/content',
+        icon: <FileTextOutlined />,
+        label: 'Content'
     },
     {
         key: '/admin/statistics',
