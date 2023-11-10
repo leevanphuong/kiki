@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-const contentSchema = mongoose.Schema({
+const ContentSchema = mongoose.Schema({
     content: String,
     hidden: String
 },
     {
         timestamps: true
     })
-export default mongoose.model('Content', contentSchema)
+export default mongoose.model('Content', ContentSchema)

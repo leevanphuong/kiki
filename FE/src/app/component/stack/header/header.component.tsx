@@ -9,7 +9,7 @@ import { useProductRedux } from '~/app/modules/client/redux/hook/useProductReduc
 import { HiOutlineLogout } from 'react-icons/hi'
 import { searchProduct } from '~/app/modules/admin/product/service/product.service'
 import Marquee from 'react-fast-marquee'
-import { getAllContent } from '~/app/api/content/content.api'
+import { getAllContent } from '~/app/modules/admin/content/service/content.service'
 interface HeaderComponentProps {
   props?: any
 }

@@ -1,4 +1,4 @@
-import { addContent } from '../../Service/Content.js';
+import { addContent } from '../../Service/Category.js';
 import status from 'http-status'
 import catchAsync from "../../../../utils/catchAsync.js";
 const addContents = catchAsync(async (req, res) => {
