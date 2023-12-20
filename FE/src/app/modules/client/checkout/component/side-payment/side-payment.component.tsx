@@ -10,12 +10,12 @@ interface SidePaymentProps {
 }
 
 const SidePayment: FunctionComponent<SidePaymentProps> = () => {
-  const [isClicked, setIsClicked] = useState(false);
-  const [textContent, setTextContent] = useState('Xem thông tin');
-  const [totalPrice, setTotalPrice] = useState<any>(0);
-  const [voucherCode, setVoucherCode] = useState<any>('');
-  const [sale, setSale] = useState<any>('');
-  const [appliedVouchers, setAppliedVouchers] = useState<string[]>([]);
+  const [isClicked, setIsClicked] = useState(false)
+  const [textContent, setTextContent] = useState('Xem thông tin')
+  const [totalPrice, setTotalPrice] = useState<any>(0)
+  const [voucherCode, setVoucherCode] = useState<any>('')
+  const [sale, setSale] = useState<any>('')
+  const [appliedVouchers, setAppliedVouchers] = useState<string[]>([])
   const handleClick = () => {
     if (isClicked) {
       setTextContent('Xem thông tin')
@@ -29,8 +29,10 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
     actions
   } = useCartRedux()
 
-  const { data: { vorchers }, actions: actionsVorcher } = useVorcherRedux()
-
+  const {
+    data: { vorchers },
+    actions: actionsVorcher
+  } = useVorcherRedux()
   useEffect(() => {
     actions.getAllCart()
   }, [])
@@ -42,89 +44,88 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
       const calculatedTotal = listProductBuy.reduce(
         (total: any, item: any) => total + item?.product?.price * item?.quantityOrder.quantity,
         0
-      );
+      )
       // const discountedAmount: number = Math.min(sale, calculatedTotal);
       // const updatedTotalPrice = calculatedTotal - discountedAmount;
       // console.log(updatedTotalPrice)
       // const finalTotalPrice = updatedTotalPrice >= 0 ? updatedTotalPrice : 0;
       // console.log(finalTotalPrice)
-      setTotalPrice(calculatedTotal);
+      setTotalPrice(calculatedTotal)
     }
-  }, [listProductBuy, sale]);
+  }, [listProductBuy, sale])
   const handleApplyVoucher = (value: string) => {
-    localStorage.removeItem('total');
-    localStorage.removeItem('sale');
+    localStorage.removeItem('total')
+    localStorage.removeItem('sale')
     if (value === '') {
-      message.error('Bạn chưa nhập Voucher');
-      setSale(0);
-      setTotalPrice(0);
-      setAppliedVouchers([]);
-      return;
+      message.error('Bạn chưa nhập Voucher')
+      setSale(0)
+      setTotalPrice(0)
+      setAppliedVouchers([])
+      return
     }
     if (appliedVouchers.includes(value)) {
-      message.warning('Bạn đã áp dụng voucher này trước đó');
-      return;
+      message.warning('Bạn đã áp dụng voucher này trước đó')
+      return
     }
 
-    const voucher = vorchers.find((voucher: any) => voucher.code === value);
+    const voucher = vorchers.find((voucher: any) => voucher.code === value)
 
     if (voucher) {
-      const discountPercentage = voucher.discount;
-      const calculatedDiscount = (totalPrice * discountPercentage) / 100;
-      const discountedAmount: number = Math.min(calculatedDiscount, totalPrice);
+      const discountPercentage = voucher.discount
+      const calculatedDiscount = (totalPrice * discountPercentage) / 100
+      const discountedAmount: number = Math.min(calculatedDiscount, totalPrice)
 
-      setSale(discountedAmount);
-      setAppliedVouchers([value]);
-      localStorage.setItem('voucherCode', value);
+      setSale(discountedAmount)
+      setAppliedVouchers([value])
+      localStorage.setItem('voucherCode', value)
 
       const updatedTotalPrice = listProductBuy.reduce(
-        (total: any, item: any) =>
-          total + item?.product?.price * item?.quantityOrder.quantity,
+        (total: any, item: any) => total + item?.product?.price * item?.quantityOrder.quantity,
         0
-      );
+      )
 
-      const finalTotalPrice = Math.max(updatedTotalPrice - discountedAmount, 0);
-      setTotalPrice(finalTotalPrice);
-      localStorage.setItem('total', finalTotalPrice.toString());
-      localStorage.setItem('sale', discountedAmount.toString());
+      const finalTotalPrice = Math.max(updatedTotalPrice - discountedAmount, 0)
+      setTotalPrice(finalTotalPrice)
+      localStorage.setItem('total', finalTotalPrice.toString())
+      localStorage.setItem('sale', discountedAmount.toString())
     } else {
-      setSale(0);
-      setTotalPrice(0);
-      setAppliedVouchers([]);
-      message.warning('Không tìm thấy voucher phù hợp');
+      setSale(0)
+      setTotalPrice(0)
+      setAppliedVouchers([])
+      message.warning('Không tìm thấy voucher phù hợp')
     }
-  };
-  const setSaletotal = localStorage.getItem("sale") || sale || 0;
-  const totalPriceValue: number = totalPrice || 0;
-  const saleResult: number = sale || 0;
-  const gettotal: any = localStorage.getItem('total') || (totalPriceValue - saleResult) || 0;
+  }
+  const setSaletotal = localStorage.getItem('sale') || sale || 0
+  const totalPriceValue: number = totalPrice || 0
+  const saleResult: number = sale || 0
+  const gettotal: any = localStorage.getItem('total') || totalPriceValue - saleResult || 0
 
   const [stateAddVorcher, setstateAddVorcher] = useState(false)
   const [stateAddVorcherHoliday, setstateAddVorcherHoliday] = useState(false)
-  const isHoliday = vorchers.some((item: any) => item.type === "Ngày lễ");
-  const isHolidayVouchers = vorchers.filter((item: any) => item.type === "Ngày lễ")
+  const isHoliday = vorchers.some((item: any) => item.type === 'Ngày lễ')
+  const isHolidayVouchers = vorchers.filter((item: any) => item.type === 'Ngày lễ')
 
   const [valueVorcher, setValivocher] = useState<any>('')
-  const getValueVocher = localStorage.getItem("voucherCode")
+  const getValueVocher = localStorage.getItem('voucherCode')
   useEffect(() => {
     setValivocher(getValueVocher)
   }, [getValueVocher])
   useEffect(() => {
-    if (getValueVocher === "") {
-      setAppliedVouchers([]);
-      localStorage.removeItem('total');
-      localStorage.removeItem('sale');
-      localStorage.removeItem('voucherCode');
+    if (getValueVocher === '') {
+      setAppliedVouchers([])
+      localStorage.removeItem('total')
+      localStorage.removeItem('sale')
+      localStorage.removeItem('voucherCode')
       setSale(0)
-      localStorage.getItem('total');
+      localStorage.getItem('total')
       const calculatedTotal = listProductBuy.reduce(
         (total: any, item: any) => total + item?.product?.price * item?.quantityOrder.quantity,
         0
-      );
-      setTotalPrice(calculatedTotal);
-      localStorage.setItem('total', calculatedTotal.toString());
+      )
+      setTotalPrice(calculatedTotal)
+      localStorage.setItem('total', calculatedTotal.toString())
     }
-  }, [listProductBuy, getValueVocher]);
+  }, [listProductBuy, getValueVocher])
   return (
     <div css={cssSidebar} className='  mt-[30px]'>
       <div className='sidebar-wrapper '>
@@ -160,7 +161,11 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
               {listProductBuy?.map((item: any, index: any) => (
                 <div className='flex flex-1 justify-between items-center' key={index}>
                   <div>
-                    <img src={item?.product?.images?.slice(0, 1).map((image: any) => image?.response || image?.url)} alt='' className='w-[40px] h-[50px]' />
+                    <img
+                      src={item?.product?.images?.slice(0, 1).map((image: any) => image?.response || image?.url)}
+                      alt=''
+                      className='w-[40px] h-[50px]'
+                    />
                   </div>
                   <div className=''>{item?.quantityOrder?.quantity}x</div>
                   <div className='truncate w-[50%]'>{item?.product?.name}</div>
@@ -186,7 +191,9 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
           <div className='summary-flexRow'>
             <div className='summary-label'>Giảm giá</div>
             <div className='summary-value summary-value-positive'>
-              {setSaletotal ? parseFloat(setSaletotal).toLocaleString("vi-VN", { style: "currency", currency: "VND" }) : "0 đ"}
+              {setSaletotal
+                ? parseFloat(setSaletotal).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+                : '0 đ'}
             </div>
           </div>
         </div>
@@ -194,147 +201,185 @@ const SidePayment: FunctionComponent<SidePaymentProps> = () => {
           <div className='order-total-label'>Tổng tiền</div>
           <div className='order-total-value'>
             <div className='order-total-total'>
-              {Number(gettotal).toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
+              {Number(gettotal).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
             </div>
           </div>
         </div>
         <div className='styles_Divider'></div>
 
-        {totalPrice >= 1000000 ? (<div>
-          <div className='flex justify-between px-[16px] py-[8px]'>
-            <div className='text-[18px] font-semibold text-[#3e3e3f]'>Mã phiếu giảm giá</div>
-            <span className='mx-[20px] w-[2px] h-[24px] bg-[#939598]'></span>
+        {totalPrice >= 1000000 ? (
+          <div>
+            <div className='flex justify-between px-[16px] py-[8px]'>
+              <div className='text-[18px] font-semibold text-[#3e3e3f]'>Mã phiếu giảm giá</div>
+              <span className='mx-[20px] w-[2px] h-[24px] bg-[#939598]'></span>
 
-            <div>
-              <div
-                className="text-[18px] font-semibold text-[#3e3e3f]"
-
-              >
-                <button type="reset" onClick={() => setstateAddVorcher(true)}>Mã của tôi</button>
-              </div>
-            </div>
-          </div>
-          {stateAddVorcher && <div className='absolute z-50'>
-            <div className='container' css={cssvorcher}>
-              <div className='allvorcher'>
-                <div className='flex'>
-                  <table className="min-w-full">
-                    <thead>
-                      <tr>
-                        <th className="py-2"></th>
-                        <th className="py-2">Vorcher</th>
-                        <th className="py-2">Mã</th>
-                        <th className="py-2">Giảm giá</th>
-                        <th className="py-2">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {vorchers.map((item: any, index: any) => (
-                        <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
-                          <td className="py-2 px-4">{index + 1}</td>
-                          <td className="py-2 px-4">{item?.name}</td>
-                          <td className="py-2 px-4">{item?.code}</td>
-                          <td className="py-2 px-4">{item?.discount}%</td>
-                          <td className="py-2 px-4">
-                            <button type='reset' onClick={() => handleApplyVoucher(item?.code)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                              Áp dụng
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-
-                  </table>
+              <div>
+                <div className='text-[18px] font-semibold text-[#3e3e3f]'>
+                  <button type='reset' onClick={() => setstateAddVorcher(true)}>
+                    Mã của tôi
+                  </button>
                 </div>
               </div>
             </div>
-            <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcher(false)}><GrFormClose /></div>
-          </div>}
-          {stateAddVorcher && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcher(false)}></div>}
-          <div className='flex justify-between px-[16px] py-[20px]'>
-            <input
-              className="border flex-1 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500"
-              type="text"
-              value={valueVorcher}
-              placeholder="Mã giảm giá"
-              onChange={(e: any) => {
-                setVoucherCode(e.target.value)
-                localStorage.setItem('voucherCode', e.target.value)
-              }}
-            />
-            <ButtonSqua type={"reset"} children='Áp dụng' className='btnSqua' onClick={() => { if (!valueVorcher) { message.error('Bạn chưa nhập Vorcher'); return; } handleApplyVoucher(valueVorcher); }} />
-          </div>
-
-        </div>
-        ) : (
-          <div className='flex px-[16px] py-[8px]'>
-            {stateAddVorcherHoliday && <div className='absolute z-50'>
-              <div className='container' css={cssvorcher}>
-                <div className='allvorcher'>
-                  <div className='flex'>
-                    <table className="min-w-full">
-                      <thead>
-                        <tr>
-                          <th className="py-2"></th>
-                          <th className="py-2">Vorcher</th>
-                          <th className="py-2">Mã</th>
-                          <th className="py-2">Giảm giá</th>
-                          <th className="py-2">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {isHolidayVouchers.map((item: any, index: any) => (
-                          <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
-                            <td className="py-2 px-4">{index + 1}</td>
-                            <td className="py-2 px-4">{item?.name}</td>
-                            <td className="py-2 px-4">{item?.code}</td>
-                            <td className="py-2 px-4">{item?.discount}%</td>
-                            <td className="py-2 px-4">
-                              <button type='reset' onClick={() => handleApplyVoucher(item?.code)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Áp dụng
-                              </button>
-                            </td>
+            {stateAddVorcher && (
+              <div className='absolute z-50'>
+                <div className='container' css={cssvorcher}>
+                  <div className='allvorcher'>
+                    <div className='flex'>
+                      <table className='min-w-full'>
+                        <thead>
+                          <tr>
+                            <th className='py-2'></th>
+                            <th className='py-2'>Vorcher</th>
+                            <th className='py-2'>Mã</th>
+                            <th className='py-2'>Giảm giá</th>
+                            <th className='py-2'>Action</th>
                           </tr>
-                        ))}
-                      </tbody>
-
-                    </table>
+                        </thead>
+                        <tbody>
+                          {vorchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                              <td className='py-2 px-4'>{index + 1}</td>
+                              <td className='py-2 px-4'>{item?.name}</td>
+                              <td className='py-2 px-4'>{item?.code}</td>
+                              <td className='py-2 px-4'>{item?.discount}%</td>
+                              <td className='py-2 px-4'>
+                                <button
+                                  type='reset'
+                                  onClick={() => handleApplyVoucher(item?.code)}
+                                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                                >
+                                  Áp dụng
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
+                <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcher(false)}>
+                  <GrFormClose />
+                </div>
               </div>
-              <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcherHoliday(false)}><GrFormClose /></div>
-            </div>}
-            {stateAddVorcherHoliday && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcherHoliday(false)}></div>}
+            )}
+            {stateAddVorcher && <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcher(false)}></div>}
+            <div className='flex justify-between px-[16px] py-[20px]'>
+              <input
+                className='border flex-1 border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500'
+                type='text'
+                value={valueVorcher}
+                placeholder='Mã giảm giá'
+                onChange={(e: any) => {
+                  setVoucherCode(e.target.value)
+                  localStorage.setItem('voucherCode', e.target.value)
+                }}
+              />
+              <ButtonSqua
+                type={'reset'}
+                children='Áp dụng'
+                className='btnSqua'
+                onClick={() => {
+                  if (!valueVorcher) {
+                    message.error('Bạn chưa nhập Vorcher')
+                    return
+                  }
+                  handleApplyVoucher(valueVorcher)
+                }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className='flex px-[16px] py-[8px]'>
+            {stateAddVorcherHoliday && (
+              <div className='absolute z-50'>
+                <div className='container' css={cssvorcher}>
+                  <div className='allvorcher'>
+                    <div className='flex'>
+                      <table className='min-w-full'>
+                        <thead>
+                          <tr>
+                            <th className='py-2'></th>
+                            <th className='py-2'>Vorcher</th>
+                            <th className='py-2'>Mã</th>
+                            <th className='py-2'>Giảm giá</th>
+                            <th className='py-2'>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {isHolidayVouchers.map((item: any, index: any) => (
+                            <tr className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'} key={index}>
+                              <td className='py-2 px-4'>{index + 1}</td>
+                              <td className='py-2 px-4'>{item?.name}</td>
+                              <td className='py-2 px-4'>{item?.code}</td>
+                              <td className='py-2 px-4'>{item?.discount}%</td>
+                              <td className='py-2 px-4'>
+                                <button
+                                  type='reset'
+                                  onClick={() => handleApplyVoucher(item?.code)}
+                                  className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
+                                >
+                                  Áp dụng
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div className='absolute top-2 right-2 text-[20px]' onClick={() => setstateAddVorcherHoliday(false)}>
+                  <GrFormClose />
+                </div>
+              </div>
+            )}
+            {stateAddVorcherHoliday && (
+              <div className='darkscreen fixed z-40' onClick={() => setstateAddVorcherHoliday(false)}></div>
+            )}
             <div>
               {isHoliday && (
                 <div>
-                  <div className="flex px-[16px] py-[8px]">
-                    <div className="text-[18px] font-semibold text-[#3e3e3f]">Mã phiếu giảm giá</div>
-                    <span className="mx-[20px] w-[2px] h-[24px] bg-[#939598]"></span>
+                  <div className='flex px-[16px] py-[8px]'>
+                    <div className='text-[18px] font-semibold text-[#3e3e3f]'>Mã phiếu giảm giá</div>
+                    <span className='mx-[20px] w-[2px] h-[24px] bg-[#939598]'></span>
                     <div>
-                      <div className="text-[18px] font-semibold text-[#3e3e3f]">
-                        <button type="reset" onClick={() => setstateAddVorcherHoliday(true)}>Mã của tôi</button>
+                      <div className='text-[18px] font-semibold text-[#3e3e3f]'>
+                        <button type='reset' onClick={() => setstateAddVorcherHoliday(true)}>
+                          Mã của tôi
+                        </button>
                       </div>
                     </div>
                   </div>
                   <div className='flex px-[16px] py-[20px]'>
                     <input
-                      className="border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500"
-                      type="text"
+                      className='border border-gray-300 rounded-lg py-2 px-4 focus:outline-none focus:border-blue-500'
+                      type='text'
                       value={valueVorcher}
-                      placeholder="Mã giảm giá"
+                      placeholder='Mã giảm giá'
                       onChange={(e: any) => {
                         setVoucherCode(e.target.value)
-                        localStorage.getItem("voucherCode")
+                        localStorage.getItem('voucherCode')
                         localStorage.setItem('voucherCode', e.target.value)
                       }}
                     />
-                    <ButtonSqua type={"reset"} children='Áp dụng' className='btnSqua' onClick={() => { if (!valueVorcher) { message.error('Bạn chưa nhập Vorcher'); return; } handleApplyVoucher(valueVorcher); }} />
+                    <ButtonSqua
+                      type={'reset'}
+                      children='Áp dụng'
+                      className='btnSqua'
+                      onClick={() => {
+                        if (!valueVorcher) {
+                          message.error('Bạn chưa nhập Vorcher')
+                          return
+                        }
+                        handleApplyVoucher(valueVorcher)
+                      }}
+                    />
                   </div>
                 </div>
               )}
             </div>
-
           </div>
         )}
         <div className='flexRow'>
@@ -468,23 +513,23 @@ const cssSidebar = css`
     line-height: 24px;
     margin-left: 16px;
     border-radius: 16px 0px;
-  };
-  .darkscreen{
-    positon:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    background:gray;
-    opacity:0.5;
+  }
+  .darkscreen {
+    positon: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: gray;
+    opacity: 0.5;
   }
 `
 const cssvorcher = css`
-    .allvorcher{
-        width: auto;
-        max-height: 150px;
-        overflow-y: auto;
-        background-color: #fff;
-        border-radius: 10px;
-    }
+  .allvorcher {
+    width: auto;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #fff;
+    border-radius: 10px;
+  }
 `

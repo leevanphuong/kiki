@@ -7,6 +7,7 @@ const orderSchema = mongoose.Schema({
         ref: 'Auth'
         // default: null,
     },
+    voucherCode:String,
     fullname: String,
     phoneNumber: String,
     district: String,

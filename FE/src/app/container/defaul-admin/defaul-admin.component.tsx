@@ -4,17 +4,15 @@ import { Breadcrumb, Button, Layout, Menu, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { menuDashBoard } from '~/app/modules/admin/constance/menu-dashboard'
-import { HiOutlineMailOpen } from 'react-icons/hi';
-import { BiBell } from 'react-icons/bi';
+import { HiOutlineMailOpen } from 'react-icons/hi'
+import { BiBell } from 'react-icons/bi'
 import { getAllSupport } from '~/app/modules/admin/support-admin/service/support-admin.service'
 import { getAllOrder } from '~/app/modules/admin/order/service/order.service'
 import { getOneUserSystem } from '~/app/api/auth/auth.api'
 
-
 const { Header, Sider, Content } = Layout
 
 const DefaultAdmin: React.FC = () => {
-
   const [supports, setSupports] = useState([])
   const [orders, setOrders] = useState([])
 
@@ -23,12 +21,10 @@ const DefaultAdmin: React.FC = () => {
       setSupports(res.data)
     })
     getAllOrder().then((res: any) => {
-      const newOrder = res.data.filter((item: any) => item.orderStatus === "đang chờ duyệt")
+      const newOrder = res.data.filter((item: any) => item.orderStatus === 'đang chờ duyệt')
       setOrders(newOrder)
     })
   }, [])
-
-
 
   let navigate = useNavigate()
   const [user, setUser] = useState<any>()
@@ -44,11 +40,15 @@ const DefaultAdmin: React.FC = () => {
   } = theme.useToken()
 
   const handleClickMenuDashboard = (data: any) => {
-    navigate(data.key)
+    if (data.key == 'https://sandbox.vnpayment.vn/merchantv2/Users/Login.htm') {
+      window.open('https://sandbox.vnpayment.vn/merchantv2/Users/Login.htm')
+    } else {
+      navigate(data.key)
+    }
   }
   const accessToken = localStorage.getItem('accessToken')
 
-  useEffect(() => { }, [accessToken])
+  useEffect(() => {}, [accessToken])
 
   return (
     <Layout css={cssLayout} style={{ height: '100vh' }}>
@@ -90,12 +90,15 @@ const DefaultAdmin: React.FC = () => {
             }}
           />
           <div className='author flex mr-[24px] gap-[24px]'>
-
             <div css={cssCartMain} className='cart-main relative mt-5'>
               <Link to={'/admin/support'}>
                 <HiOutlineMailOpen className='font-bold' />
               </Link>
-              {supports?.length >= 0 && accessToken ? <span className='absolute show-count'>{supports?.length}</span> : ''}
+              {supports?.length >= 0 && accessToken ? (
+                <span className='absolute show-count'>{supports?.length}</span>
+              ) : (
+                ''
+              )}
             </div>
 
             <div css={cssCartMain} className='cart-main relative mt-5'>
@@ -135,7 +138,6 @@ const DefaultAdmin: React.FC = () => {
         >
           <Outlet />
         </Content>
-
       </Layout>
     </Layout>
   )

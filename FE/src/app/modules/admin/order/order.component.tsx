@@ -11,7 +11,7 @@ const { Option } = Select
 
 const { Title } = Typography
 
-interface OrderManagementProps { }
+interface OrderManagementProps {}
 
 const OrderManagement: FunctionComponent<OrderManagementProps> = () => {
   const [orderStatus, setOrderStatus] = useState<string | number>('đang chờ duyệt')
@@ -122,7 +122,7 @@ const OrderManagement: FunctionComponent<OrderManagementProps> = () => {
     getAllOrder().then((res) => {
       setDataOrder(res.data)
     })
-     getAllProduct().then((res) => {
+    getAllProduct().then((res) => {
       setDataProduct(res.data)
       setListProduct(
         res.data.map((item: any) => {
@@ -391,8 +391,8 @@ const OrderManagement: FunctionComponent<OrderManagementProps> = () => {
                   rules={[{ required: true, message: 'Vui lòng chọn Phương thức thanh toán!' }]}
                 >
                   <Select placeholder='Phương thức thanh toán'>
-                    <Select.Option value='Thanh toán khi nhận hàng'>Thanh toán khi nhận hàng</Select.Option>
-                    <Select.Option value='vnpay'>vnpay</Select.Option>
+                    {/* <Select.Option value='Thanh toán khi nhận hàng'>Thanh toán khi nhận hàng</Select.Option> */}
+                    <Select.Option value='Thanh toán trực tiếp'>Thanh toán trực tiếp</Select.Option>
                   </Select>
                 </Form.Item>
 
@@ -423,7 +423,7 @@ const OrderManagement: FunctionComponent<OrderManagementProps> = () => {
                                 options={listProduct}
                                 onChange={(value, label) => {
                                   handleProductChange(value)
-                                                            }}
+                                }}
                               ></Select>
                             </Form.Item>
 
